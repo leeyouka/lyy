@@ -31,10 +31,10 @@
     . "date char(32),"
     . "pass char(32)"
     .");";
-    $stmt = $pdo->query($sql);
+    $stmt = $pdo->query($sql); //クエリ実行
     //新規投稿機能
     if(!empty($_POST["name"]) && !empty($_POST["comment"])
-     &&empty($_POST["display"]) && !empty($_POST["pass"])){
+     &&empty($_POST["display"]) && !empty($_POST["pass"])){//ディスプレイに値が入っていないときは新規投稿モード
             $date = date("Y/m/d h:i:s"); //日時を変数に定義
         //INSERT文：データを入力する
             $sql = $pdo -> prepare("INSERT INTO tb5(name, comment,date,pass) 
@@ -47,7 +47,7 @@
             $sql -> execute();//クエリの実行
         }
             
-    //編集選択をつける
+    //編集選択機能をつける
     if(!empty($edit)&&!empty($edipass)){ //編集対象番号とパスワードが送信されたとき
     
     //SELECT文：入力したデータレコードを抽出し、表示する
@@ -63,9 +63,9 @@
     }
     
     
-    //編集実行
+    //編集実行機能をつける
     if( !empty($_POST["pass"])
-      &&  !empty($_POST["display"]) && !empty($_POST["name"])
+      &&  !empty($_POST["display"]) && !empty($_POST["name"])//ディスプレイに値が入っているときは編集モード
       && !empty($_POST["comment"])){
           $date = date("Y/m/d h:i:s"); //日時を変数に定義
           
@@ -74,12 +74,13 @@
     $id =$_POST["display"]; //変更する投稿番号として編集対象番号を指定
     $sql = 'UPDATE tb5 SET name=:name,comment=:comment,date=:date,pass=:pass WHERE id=:id';
     $stmt = $pdo->prepare($sql);
+        //各変数を定義
     $stmt->bindParam(':name', $name, PDO::PARAM_STR);
     $stmt->bindParam(':comment', $comment, PDO::PARAM_STR);
     $stmt -> bindParam(':date', $date, PDO::PARAM_STR);
     $stmt-> bindParam(':pass', $pass, PDO::PARAM_STR);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->execute();
+    $stmt->execute();//実行
       }
       
       //削除機能をつける
@@ -103,7 +104,7 @@
         value="<?php if(!empty($ecomment)){echo $ecomment;}?>"><br>
         <input type="text" name="pass" placeholder="パスワード"><br>
         
-        <input type="text" name="display"
+        <input type="hidden" name="display"
         value="<?php if(!empty($edit) && $row['id']==$edit){echo $edit;} ?>"><br>
         <input type="submit" name="submit" value="送信"><br>
         
